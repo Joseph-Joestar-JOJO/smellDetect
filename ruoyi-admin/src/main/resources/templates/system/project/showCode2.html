@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+    <meta charset="UTF-8">
+    <th:block th:include="include :: header('代码浏览')" />
+    <link rel="stylesheet" href="/SyntaxHighlighter/styles/shCore.css">
+    <link rel="stylesheet" href="/SyntaxHighlighter/styles/shThemeDefault.css">
+
+
+</head>
+
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 select-table table-striped" >
+                    <div class="col-sm-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h3 id="filename"></h3>
+                            </div>
+                            <div id="codeMain" class="ibox-content" style="height: 500px;overflow: scroll">
+
+                                <div id = "codePre">
+
+                                    <pre id="content" class="brush: java;">
+
+    </pre>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript" src="/SyntaxHighlighter/scripts/XRegExp.js"></script>
+<script type="text/javascript" src="/SyntaxHighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="/SyntaxHighlighter/scripts/shBrushJava.js"></script>
+<script type="text/javascript" src="/SyntaxHighlighter/scripts/shBrushJScript.js"></script>
+<script type="text/javascript" src="/SyntaxHighlighter/scripts/shBrushSql.js"></script>
+
+<script th:inline="javascript">
+    var url=[[${url}]];
+    var commit=[[${commit}]];
+    var content=[[${content}]];
+    var filePath=[[${filePath}]];
+    document.getElementById("filename").innerText = "代码浏览\n"+"项目地址："+url+"\n"+"提交标识："+commit+"\n"+"文件路径: "+filePath ;//红色标记需要重点关注，绿色标记代表修改范围，蓝色和紫色标记的代码之间相似度比较高
+    document.getElementById("content").innerText = content;
+    SyntaxHighlighter.defaults['toolbar'] = false;
+    SyntaxHighlighter.config.tagName = 'pre';       //可以更改解析的默认Tag。
+    SyntaxHighlighter.config.bloggerMode = true;
+    SyntaxHighlighter.config.stripBrs = true;
+    SyntaxHighlighter.highlight();
+</script>
+</body>
+</html>

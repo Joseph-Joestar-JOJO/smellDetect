@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SmellcountMapper">
+  <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.Smellcount">
+    <id column="commitHash" jdbcType="VARCHAR" property="commithash" />
+    <id column="projURL" jdbcType="VARCHAR" property="projurl" />
+    <result column="BlobCount" jdbcType="INTEGER" property="blobcount" />
+    <result column="FeatureEnvyCount" jdbcType="INTEGER" property="featureenvycount" />
+    <result column="LongMethodCount" jdbcType="INTEGER" property="longmethodcount" />
+    <result column="MisplacedClassCount" jdbcType="INTEGER" property="misplacedclasscount" />
+    <result column="PromiscuousPackageCount" jdbcType="INTEGER" property="promiscuouspackagecount" />
+    <result column="commitDate" jdbcType="VARCHAR" property="commitdate" />
+    <result column="BlobChange" jdbcType="INTEGER" property="blobchange" />
+    <result column="FeatureEnvyChange" jdbcType="INTEGER" property="featureenvychange" />
+    <result column="LongMethodChange" jdbcType="INTEGER" property="longmethodchange" />
+    <result column="MisplacedClassChange" jdbcType="INTEGER" property="misplacedclasschange" />
+    <result column="PromiscuousPackageChange" jdbcType="INTEGER" property="promiscuouspackagechange" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    commitHash, projURL, BlobCount, FeatureEnvyCount, LongMethodCount, MisplacedClassCount, 
+    PromiscuousPackageCount, commitDate, BlobChange, FeatureEnvyChange, LongMethodChange, 
+    MisplacedClassChange, PromiscuousPackageChange
+  </sql>
+  <select id="selectByExample" parameterType="generator.SmellcountExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from smellcount
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="generator.SmellcountKey" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from smellcount
+    where commitHash = #{commithash,jdbcType=VARCHAR}
+      and projURL = #{projurl,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="generator.SmellcountKey">
+    delete from smellcount
+    where commitHash = #{commithash,jdbcType=VARCHAR}
+      and projURL = #{projurl,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="generator.SmellcountExample">
+    delete from smellcount
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="projURL" keyProperty="projurl" parameterType="com.ruoyi.system.domain.Smellcount" useGeneratedKeys="true">
+    insert into smellcount (projURL,commitHash, BlobCount, FeatureEnvyCount,
+      LongMethodCount, MisplacedClassCount, PromiscuousPackageCount, 
+      commitDate, BlobChange, FeatureEnvyChange, 
+      LongMethodChange, MisplacedClassChange, 
+      PromiscuousPackageChange)
+    values (#{projurl,jdbcType=VARCHAR},#{commithash,jdbcType=VARCHAR}, #{blobcount,jdbcType=INTEGER}, #{featureenvycount,jdbcType=INTEGER},
+      #{longmethodcount,jdbcType=INTEGER}, #{misplacedclasscount,jdbcType=INTEGER}, #{promiscuouspackagecount,jdbcType=INTEGER}, 
+      #{commitdate,jdbcType=VARCHAR}, #{blobchange,jdbcType=INTEGER}, #{featureenvychange,jdbcType=INTEGER}, 
+      #{longmethodchange,jdbcType=INTEGER}, #{misplacedclasschange,jdbcType=INTEGER}, 
+      #{promiscuouspackagechange,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" keyColumn="projURL" keyProperty="projurl" parameterType="com.ruoyi.system.domain.Smellcount" useGeneratedKeys="true">
+    insert into smellcount
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="commithash != null">
+        commitHash,
+      </if>
+      <if test="blobcount != null">
+        BlobCount,
+      </if>
+      <if test="featureenvycount != null">
+        FeatureEnvyCount,
+      </if>
+      <if test="longmethodcount != null">
+        LongMethodCount,
+      </if>
+      <if test="misplacedclasscount != null">
+        MisplacedClassCount,
+      </if>
+      <if test="promiscuouspackagecount != null">
+        PromiscuousPackageCount,
+      </if>
+      <if test="commitdate != null">
+        commitDate,
+      </if>
+      <if test="blobchange != null">
+        BlobChange,
+      </if>
+      <if test="featureenvychange != null">
+        FeatureEnvyChange,
+      </if>
+      <if test="longmethodchange != null">
+        LongMethodChange,
+      </if>
+      <if test="misplacedclasschange != null">
+        MisplacedClassChange,
+      </if>
+      <if test="promiscuouspackagechange != null">
+        PromiscuousPackageChange,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="commithash != null">
+        #{commithash,jdbcType=VARCHAR},
+      </if>
+      <if test="blobcount != null">
+        #{blobcount,jdbcType=INTEGER},
+      </if>
+      <if test="featureenvycount != null">
+        #{featureenvycount,jdbcType=INTEGER},
+      </if>
+      <if test="longmethodcount != null">
+        #{longmethodcount,jdbcType=INTEGER},
+      </if>
+      <if test="misplacedclasscount != null">
+        #{misplacedclasscount,jdbcType=INTEGER},
+      </if>
+      <if test="promiscuouspackagecount != null">
+        #{promiscuouspackagecount,jdbcType=INTEGER},
+      </if>
+      <if test="commitdate != null">
+        #{commitdate,jdbcType=VARCHAR},
+      </if>
+      <if test="blobchange != null">
+        #{blobchange,jdbcType=INTEGER},
+      </if>
+      <if test="featureenvychange != null">
+        #{featureenvychange,jdbcType=INTEGER},
+      </if>
+      <if test="longmethodchange != null">
+        #{longmethodchange,jdbcType=INTEGER},
+      </if>
+      <if test="misplacedclasschange != null">
+        #{misplacedclasschange,jdbcType=INTEGER},
+      </if>
+      <if test="promiscuouspackagechange != null">
+        #{promiscuouspackagechange,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="generator.SmellcountExample" resultType="java.lang.Long">
+    select count(*) from smellcount
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update smellcount
+    <set>
+      <if test="record.commithash != null">
+        commitHash = #{record.commithash,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projurl != null">
+        projURL = #{record.projurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.blobcount != null">
+        BlobCount = #{record.blobcount,jdbcType=INTEGER},
+      </if>
+      <if test="record.featureenvycount != null">
+        FeatureEnvyCount = #{record.featureenvycount,jdbcType=INTEGER},
+      </if>
+      <if test="record.longmethodcount != null">
+        LongMethodCount = #{record.longmethodcount,jdbcType=INTEGER},
+      </if>
+      <if test="record.misplacedclasscount != null">
+        MisplacedClassCount = #{record.misplacedclasscount,jdbcType=INTEGER},
+      </if>
+      <if test="record.promiscuouspackagecount != null">
+        PromiscuousPackageCount = #{record.promiscuouspackagecount,jdbcType=INTEGER},
+      </if>
+      <if test="record.commitdate != null">
+        commitDate = #{record.commitdate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.blobchange != null">
+        BlobChange = #{record.blobchange,jdbcType=INTEGER},
+      </if>
+      <if test="record.featureenvychange != null">
+        FeatureEnvyChange = #{record.featureenvychange,jdbcType=INTEGER},
+      </if>
+      <if test="record.longmethodchange != null">
+        LongMethodChange = #{record.longmethodchange,jdbcType=INTEGER},
+      </if>
+      <if test="record.misplacedclasschange != null">
+        MisplacedClassChange = #{record.misplacedclasschange,jdbcType=INTEGER},
+      </if>
+      <if test="record.promiscuouspackagechange != null">
+        PromiscuousPackageChange = #{record.promiscuouspackagechange,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update smellcount
+    set commitHash = #{record.commithash,jdbcType=VARCHAR},
+      projURL = #{record.projurl,jdbcType=VARCHAR},
+      BlobCount = #{record.blobcount,jdbcType=INTEGER},
+      FeatureEnvyCount = #{record.featureenvycount,jdbcType=INTEGER},
+      LongMethodCount = #{record.longmethodcount,jdbcType=INTEGER},
+      MisplacedClassCount = #{record.misplacedclasscount,jdbcType=INTEGER},
+      PromiscuousPackageCount = #{record.promiscuouspackagecount,jdbcType=INTEGER},
+      commitDate = #{record.commitdate,jdbcType=VARCHAR},
+      BlobChange = #{record.blobchange,jdbcType=INTEGER},
+      FeatureEnvyChange = #{record.featureenvychange,jdbcType=INTEGER},
+      LongMethodChange = #{record.longmethodchange,jdbcType=INTEGER},
+      MisplacedClassChange = #{record.misplacedclasschange,jdbcType=INTEGER},
+      PromiscuousPackageChange = #{record.promiscuouspackagechange,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.system.domain.Smellcount">
+    update smellcount
+    <set>
+      <if test="blobcount != null">
+        BlobCount = #{blobcount,jdbcType=INTEGER},
+      </if>
+      <if test="featureenvycount != null">
+        FeatureEnvyCount = #{featureenvycount,jdbcType=INTEGER},
+      </if>
+      <if test="longmethodcount != null">
+        LongMethodCount = #{longmethodcount,jdbcType=INTEGER},
+      </if>
+      <if test="misplacedclasscount != null">
+        MisplacedClassCount = #{misplacedclasscount,jdbcType=INTEGER},
+      </if>
+      <if test="promiscuouspackagecount != null">
+        PromiscuousPackageCount = #{promiscuouspackagecount,jdbcType=INTEGER},
+      </if>
+      <if test="commitdate != null">
+        commitDate = #{commitdate,jdbcType=VARCHAR},
+      </if>
+      <if test="blobchange != null">
+        BlobChange = #{blobchange,jdbcType=INTEGER},
+      </if>
+      <if test="featureenvychange != null">
+        FeatureEnvyChange = #{featureenvychange,jdbcType=INTEGER},
+      </if>
+      <if test="longmethodchange != null">
+        LongMethodChange = #{longmethodchange,jdbcType=INTEGER},
+      </if>
+      <if test="misplacedclasschange != null">
+        MisplacedClassChange = #{misplacedclasschange,jdbcType=INTEGER},
+      </if>
+      <if test="promiscuouspackagechange != null">
+        PromiscuousPackageChange = #{promiscuouspackagechange,jdbcType=INTEGER},
+      </if>
+    </set>
+    where commitHash = #{commithash,jdbcType=VARCHAR}
+      and projURL = #{projurl,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.system.domain.Smellcount">
+    update smellcount
+    set BlobCount = #{blobcount,jdbcType=INTEGER},
+      FeatureEnvyCount = #{featureenvycount,jdbcType=INTEGER},
+      LongMethodCount = #{longmethodcount,jdbcType=INTEGER},
+      MisplacedClassCount = #{misplacedclasscount,jdbcType=INTEGER},
+      PromiscuousPackageCount = #{promiscuouspackagecount,jdbcType=INTEGER},
+      commitDate = #{commitdate,jdbcType=VARCHAR},
+      BlobChange = #{blobchange,jdbcType=INTEGER},
+      FeatureEnvyChange = #{featureenvychange,jdbcType=INTEGER},
+      LongMethodChange = #{longmethodchange,jdbcType=INTEGER},
+      MisplacedClassChange = #{misplacedclasschange,jdbcType=INTEGER},
+      PromiscuousPackageChange = #{promiscuouspackagechange,jdbcType=INTEGER}
+    where commitHash = #{commithash,jdbcType=VARCHAR}
+      and projURL = #{projurl,jdbcType=VARCHAR}
+  </update>
+</mapper>

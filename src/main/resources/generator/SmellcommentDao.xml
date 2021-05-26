@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="generator.SmellcommentDao">
+  <resultMap id="BaseResultMap" type="generator.Smellcomment">
+    <id column="commentID" jdbcType="INTEGER" property="commentid" />
+    <result column="projURL" jdbcType="INTEGER" property="projurl" />
+    <result column="commitHash" jdbcType="VARCHAR" property="commithash" />
+    <result column="authorName" jdbcType="VARCHAR" property="authorname" />
+    <result column="authorID" jdbcType="VARCHAR" property="authorid" />
+    <result column="createTime" jdbcType="DATE" property="createtime" />
+    <result column="authorEmail" jdbcType="VARCHAR" property="authoremail" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    commentID, projURL, commitHash, authorName, authorID, createTime, authorEmail, `name`
+  </sql>
+  <select id="selectByExample" parameterType="generator.SmellcommentExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from smellcomment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from smellcomment
+    where commentID = #{commentid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from smellcomment
+    where commentID = #{commentid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="generator.SmellcommentExample">
+    delete from smellcomment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="commentID" keyProperty="commentid" parameterType="generator.Smellcomment" useGeneratedKeys="true">
+    insert into smellcomment (projURL, commitHash, authorName, 
+      authorID, createTime, authorEmail, 
+      `name`)
+    values (#{projurl,jdbcType=INTEGER}, #{commithash,jdbcType=VARCHAR}, #{authorname,jdbcType=VARCHAR}, 
+      #{authorid,jdbcType=VARCHAR}, #{createtime,jdbcType=DATE}, #{authoremail,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="commentID" keyProperty="commentid" parameterType="generator.Smellcomment" useGeneratedKeys="true">
+    insert into smellcomment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="projurl != null">
+        projURL,
+      </if>
+      <if test="commithash != null">
+        commitHash,
+      </if>
+      <if test="authorname != null">
+        authorName,
+      </if>
+      <if test="authorid != null">
+        authorID,
+      </if>
+      <if test="createtime != null">
+        createTime,
+      </if>
+      <if test="authoremail != null">
+        authorEmail,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="projurl != null">
+        #{projurl,jdbcType=INTEGER},
+      </if>
+      <if test="commithash != null">
+        #{commithash,jdbcType=VARCHAR},
+      </if>
+      <if test="authorname != null">
+        #{authorname,jdbcType=VARCHAR},
+      </if>
+      <if test="authorid != null">
+        #{authorid,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=DATE},
+      </if>
+      <if test="authoremail != null">
+        #{authoremail,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="generator.SmellcommentExample" resultType="java.lang.Long">
+    select count(*) from smellcomment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update smellcomment
+    <set>
+      <if test="record.commentid != null">
+        commentID = #{record.commentid,jdbcType=INTEGER},
+      </if>
+      <if test="record.projurl != null">
+        projURL = #{record.projurl,jdbcType=INTEGER},
+      </if>
+      <if test="record.commithash != null">
+        commitHash = #{record.commithash,jdbcType=VARCHAR},
+      </if>
+      <if test="record.authorname != null">
+        authorName = #{record.authorname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.authorid != null">
+        authorID = #{record.authorid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createtime != null">
+        createTime = #{record.createtime,jdbcType=DATE},
+      </if>
+      <if test="record.authoremail != null">
+        authorEmail = #{record.authoremail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        `name` = #{record.name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update smellcomment
+    set commentID = #{record.commentid,jdbcType=INTEGER},
+      projURL = #{record.projurl,jdbcType=INTEGER},
+      commitHash = #{record.commithash,jdbcType=VARCHAR},
+      authorName = #{record.authorname,jdbcType=VARCHAR},
+      authorID = #{record.authorid,jdbcType=VARCHAR},
+      createTime = #{record.createtime,jdbcType=DATE},
+      authorEmail = #{record.authoremail,jdbcType=VARCHAR},
+      `name` = #{record.name,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="generator.Smellcomment">
+    update smellcomment
+    <set>
+      <if test="projurl != null">
+        projURL = #{projurl,jdbcType=INTEGER},
+      </if>
+      <if test="commithash != null">
+        commitHash = #{commithash,jdbcType=VARCHAR},
+      </if>
+      <if test="authorname != null">
+        authorName = #{authorname,jdbcType=VARCHAR},
+      </if>
+      <if test="authorid != null">
+        authorID = #{authorid,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createTime = #{createtime,jdbcType=DATE},
+      </if>
+      <if test="authoremail != null">
+        authorEmail = #{authoremail,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where commentID = #{commentid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="generator.Smellcomment">
+    update smellcomment
+    set projURL = #{projurl,jdbcType=INTEGER},
+      commitHash = #{commithash,jdbcType=VARCHAR},
+      authorName = #{authorname,jdbcType=VARCHAR},
+      authorID = #{authorid,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=DATE},
+      authorEmail = #{authoremail,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR}
+    where commentID = #{commentid,jdbcType=INTEGER}
+  </update>
+</mapper>

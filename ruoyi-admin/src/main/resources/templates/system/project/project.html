@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('项目列表')" />
+</head>
+<body class="gray-bg">
+	<div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="post-form">
+					<div class="select-list">
+						<ul>
+							<li>
+								项目地址：<input type="text" name="projurl"/>
+							</li>
+							<li>
+								项目名称：<input type="text" name="projname"/>
+							</li>
+							<li>
+								项目状态：
+							</li>
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+							    <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+			<div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:project:add">
+	                <i class="fa fa-plus"></i> 新增
+	            </a>
+				<a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:project:edit">
+		            <i class="fa fa-edit"></i> 修改
+		        </a>
+				<a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:project:remove">
+		            <i class="fa fa-remove"></i> 删除
+		        </a>
+<!--				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:project:export">-->
+<!--		            <i class="fa fa-download"></i> 导出-->
+<!--		        </a>-->
+	        </div>
+	        
+	        <div class="col-sm-12 select-table table-striped">
+			    <table id="bootstrap-table"></table>
+			</div>
+		</div>
+	</div>
+	<th:block th:include="include :: footer" />
+	<script th:inline="javascript">
+		var editFlag = [[${@permission.hasPermi('system:project:edit')}]];
+		var removeFlag = [[${@permission.hasPermi('system:project:remove')}]];
+		var datas = [[${@dict.getType('sys_normal_disable')}]];
+		var prefix = ctx + "system/project";
+
+		$(function() {
+		    var options = {
+		        url: prefix + "/list",
+		        createUrl: prefix + "/add",
+		        updateUrl: prefix + "/edit/{id}",
+		        removeUrl: prefix + "/remove",
+		        exportUrl: prefix + "/export",
+		        modalName: "项目",
+		        columns: [{
+		            checkbox: true
+		        },
+		        {
+		            field: 'projid',
+		            title: '项目编号'
+		        },
+		        {
+		            field: 'projurl',
+		            title: '项目地址',
+		            sortable: true
+		        },
+		        {
+		            field: 'projname',
+		            title: '项目名称',
+		            sortable: true
+		        },
+		        {
+		            field: 'status',
+		            title: '分析状态',
+		            sortable: true
+		        },
+				{
+					field: 'manager',
+					title: '管理者',
+					sortable: true
+				},
+
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		                var actions = [];
+						actions.push('<a class="btn btn-info btn-xs href="javascript:void(0)" onclick="javascrtpt:window.location.href=\'/system/smellcountLast?id='+ row.projid + '&path=' +row.projurl +'\'""><i class="fa fa-line-chart"></i>最新版本</a>');
+						actions.push('<a class="btn btn-info btn-xs href="javascript:void(0)" onclick="javascrtpt:window.location.href=\'/system/commitShow?id='+ row.projid + '&path=' +row.projurl +'\'""><i class="fa fa-line-chart"></i>提交列表</a>');
+						actions.push('<a class="btn btn-info btn-xs href="javascript:void(0)" onclick="javascrtpt:window.location.href=\'/system/smellcount?id='+ row.projid + '&path=' +row.projurl +'\'""><i class="fa fa-line-chart"></i>异味趋势</a>');
+		                return actions.join('');
+		            }
+		        }]
+		    };
+		    $.table.init(options);
+		});
+	</script>
+</body>
+</html>

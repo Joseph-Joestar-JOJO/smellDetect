@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<head>
+    <th:block th:include="include :: header('百度ECharts')" />
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 id="ti">分析结果</h5>
+                    <div class="ibox-tools">
+                        <a href="javascript:location.reload();" class="roll-nav roll-right tabReload"><i class="fa fa-refresh"></i> 刷新</a>
+                        <a href="JavaScript:history.back(-1)" class="close-link">
+                            <i class="fa fa-times">关闭</i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="ibox">
+                            <div class="ibox-title">
+                                <h5>与上一版本对比</h5>
+                            </div>
+                            <div class="ibox-content">
+
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                blob
+                                            </div>
+                                            <div class="panel-body">
+                                                <p id="t1"></p>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                feature Envy
+                                            </div>
+                                            <div class="panel-body">
+                                                <p id="t2"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                long Method
+                                            </div>
+                                            <div class="panel-body">
+                                                <p id="t3"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <div class="col-sm-2">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            misplaced Class
+                                        </div>
+                                        <div class="panel-body">
+                                            <p id="t4"></p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            promiscuous Package
+                                        </div>
+                                        <div class="panel-body">
+                                            <p id="t5"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="ibox-content">
+                    <div style="height:600px" id="mainChart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer" />
+<th:block th:include="include :: echarts-js" />
+<script type="text/javascript" th:inline="javascript">
+    var commit=[[${commit}]];
+    var url=[[${url}]];
+    var tag="";
+    var dom = document.getElementById("mainChart");
+    var myChart = echarts.init(dom);
+    myChart.clear();
+
+    var nums = [];
+    var numsChange = [];
+    var option = {
+        title: {
+            text: '代码异味统计',
+            left: '1%'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: [{
+            type: 'category',
+            data: ['blob', 'feature Envy', 'long Method', 'misplaced Class', 'promiscuous Package'],
+            splitLine: {
+                show: false
+            },
+            axisTick: {
+                alignWithLabel: true
+            }
+        }],
+        yAxis: [{
+            type: 'value',
+            splitLine: {
+                show: false
+            },
+            splitArea: {
+                show: true,
+            },
+        }],
+        series: [{
+            name: '异味',
+            type: 'bar',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'top'
+                }
+            },
+            itemStyle: {
+                normal: {
+                    // 随机显示
+                    //color:function(d){return "#"+Math.floor(Math.random()*(256*256*256-1)).toString(16);}
+
+                    // 定制显示（按顺序）
+                    color: function(params) {
+                        var colorList = ['#C33531','#64BD3D','#EE9201','#29AAE3', '#B74AE5','#0AAF9F','#E89589','#16A085','#4A235A','#C39BD3 ','#F9E79F','#BA4A00','#ECF0F1','#616A6B','#EAF2F8','#4A235A','#3498DB' ];
+                        return colorList[params.dataIndex]
+                    }
+                },
+            },
+            data: nums,
+        }]
+    };
+    $.ajax({
+        method:'post',
+        url:'/readDataByCommit',
+        data: {"commit":commit,"url":url},
+        dataType:'json',
+        success:function(data){
+            console.log(data);
+            nums.push(data.blobcount);
+            nums.push(data.featureenvycount);
+            nums.push(data.longmethodcount);
+            nums.push(data.misplacedclasscount);
+            nums.push(data.promiscuouspackagecount);
+            numsChange.push(data.blobchange);
+            numsChange.push(data.featureenvychange);
+            numsChange.push(data.longmethodchange);
+            numsChange.push(data.misplacedclasschange);
+            numsChange.push(data.promiscuouspackagechange);
+
+                document.getElementById("t1").innerHTML = numsChange[0];
+                document.getElementById("t2").innerHTML = numsChange[1];
+                document.getElementById("t3").innerHTML = numsChange[2];
+                document.getElementById("t4").innerHTML = numsChange[3];
+                document.getElementById("t5").innerHTML = numsChange[4];
+
+
+            myChart.setOption(option, true);
+            var title = "项目： "+url+"          版本标识："+commit+"    \n"+"    提示：可以点击下方结点查看异味详情";
+            document.getElementById("ti").innerText = title;
+            myChart.on('click', function (params) {
+                //window.open('https://www.baidu.com/s?wd=' + encodeURIComponent(params.name)+"url: "+url);
+                window.location.href='/system/showCode?url='+url+'&commit='+commit+'&catalog='+params.dataIndex;
+            });
+            $(window).resize(mainChart.resize);
+        }
+    });
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<head>
+	<th:block th:include="include :: header('百度ECharts')" />
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5 id = "ti"></h5>
+                        <div class="ibox-tools">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench">切换</i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="javascript:void(0)" onclick="showAll()">全部异味</a>
+                                </li>
+                                <li><a href="javascript:void(0)" onclick="showBlob()">Blob</a>
+                                </li>
+                                <li><a href="javascript:void(0)" onclick="showFeatureEnvy()">Feature Envy</a>
+                                </li>
+                                <li><a href="javascript:void(0)" onclick="showMisplacedClass()">Misplaced Class</a>
+                                </li>
+                                <li><a href="javascript:void(0)" onclick="showPromiscuousPackage()">Promiscuous Package</a>
+                                </li>
+                                <li><a href="javascript:void(0)" onclick="showLongMethod()">Long Method</a>
+                                </li>
+                            </ul>
+                            <a href="javascript:location.reload();" class="roll-nav roll-right tabReload"><i class="fa fa-refresh"></i> 刷新</a>
+                            <a href="JavaScript:history.back(-1)" class="close-link">
+                                <i class="fa fa-times">关闭</i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div style="height:600px" id="mainChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: echarts-js" />
+    <script type="text/javascript" th:inline="javascript">
+
+        var dom = document.getElementById("mainChart");
+        var myChart = echarts.init(dom);
+        myChart.clear();
+
+        var commit = [];
+        var tag = [];
+        var nums = [];
+        var blobcount = [];
+        var featureenvycount = [];
+        var longmethodcount = [];
+        var misplacedclasscount = [];
+        var promiscuouspackagecount = [];
+        var option = {
+            title: {
+                text: '所有异味',
+                left: '1%'
+            },
+            tooltip: {
+                trigger: 'axis',
+                // formatter: function (params) {
+                //     console.log(params);
+                //     var showHtm=params.name;
+                //     // for (var i = 0; i < data.length; i++)
+                //     // {
+                //     //     if(data[i].tag == params.name)
+                //     //     {
+                //     //         showHtm = data[i].commithash+" "+data[i].tag;
+                //     //     }
+                //     // }
+                //     return showHtm;
+                // }
+            },
+            grid: {
+                left: '5%',
+                right: '15%',
+                bottom: '10%'
+            },
+            xAxis: {
+                data: tag
+            },
+            yAxis: {
+                min: 0,
+                max: function(value) {
+                    return value.max*3;
+                },
+                type:'value'
+            },
+            toolbox: {
+                right: 10,
+                feature: {
+                    dataZoom: {
+                        yAxisIndex: 'none'
+                    },
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            dataZoom: [
+                {
+                    type: 'slider',
+                    xAxisIndex: 0
+                },
+                {
+                    type: 'inside',
+                    xAxisIndex: 0
+                },
+                {
+                    type: 'slider',
+                    yAxisIndex: 0
+                },
+                {
+                    type: 'inside',
+                    yAxisIndex: 0
+                }
+            ],
+            visualMap: {
+                top: 10,
+                right: 10,
+                pieces: [{
+                    gt: 0,
+                    lte: 20,
+                    color: '#096'
+                }, {
+                    gt: 20,
+                    lte: 60,
+                    color: '#ffde33'
+                }, {
+                    gt: 60,
+                    lte: 100,
+                    color: '#ff9933'
+                }, {
+                    gt: 100,
+                    lte: 140,
+                    color: '#cc0033'
+                }, {
+                    gt: 140,
+                    lte: 180,
+                    color: '#660099'
+                }, {
+                    gt: 180,
+                    color: '#7e0023'
+                }],
+                outOfRange: {
+                    color: '#999'
+                }
+            },
+            series: {
+                name: '版本异味',
+                type: 'line',
+                data: nums,
+                markLine: {
+                    silent: true,
+                    lineStyle: {
+                        color: '#333'
+                    },
+                    data: [{
+                        yAxis: 20
+                    }, {
+                        yAxis: 60
+                    }, {
+                        yAxis: 100
+                    }, {
+                        yAxis: 140
+                    }, {
+                        yAxis: 180
+                    }]
+                }
+            }
+        };
+        var url=[[${url}]];
+        $.ajax({
+            method:'post',
+            url:'/readData',
+            data: {"url":url},
+            dataType:'json',
+            success:function(data){
+                console.log(data);
+                for (var i = 0; i < data.length; i++){
+                    commit.push(data[i].commithash);
+                    tag.push(data[i].tag);
+                    var count = data[i].blobcount;
+                    count += data[i].featureenvycount;
+                    count += data[i].longmethodcount;
+                    count += data[i].misplacedclasscount;
+                    count += data[i].promiscuouspackagecount;
+                    nums.push(count);
+
+                    blobcount.push(data[i].blobcount);
+                    featureenvycount.push(data[i].featureenvycount);
+                    longmethodcount.push(data[i].longmethodcount);
+                    misplacedclasscount.push(data[i].misplacedclasscount);
+                    promiscuouspackagecount.push(data[i].promiscuouspackagecount);
+
+                }
+                var title = "项目： "+url+"\n"+"提示：可以点击右边的“切换”按钮筛选异味类型，点击下方结点查看异味详情";
+                document.getElementById("ti").innerText = title;
+                myChart.setOption(option, true);
+                myChart.on('click', function (params) {
+                    //window.open('/system/smellcountByCommit?url='+url+'&commit='+params.name);
+                    var commithash = "";
+                    for (var i = 0; i < data.length; i++)
+                    {
+                        if(data[i].tag == params.name)
+                        {
+                            commithash = data[i].commithash;
+                        }
+                    }
+                    window.location.href='/system/smellcountByCommit?url='+url+'&commit='+commithash+'&tag='+params.name;
+                });
+                $(window).resize(mainChart.resize);
+            }
+        });
+
+        function showAll() {
+            option.series.data = nums;
+            option.title.text = "所有异味";
+            myChart.setOption(option, true);
+        }
+        function showBlob() {
+            option.series.data = blobcount;
+            option.title.text = "blob";
+            myChart.setOption(option, true);
+        }
+        function showFeatureEnvy() {
+            option.series.data = featureenvycount;
+            option.title.text = "feature Envy";
+            myChart.setOption(option, true);
+        }
+        function showMisplacedClass() {
+            option.series.data = misplacedclasscount;
+            option.title.text = "misplaced Class";
+            myChart.setOption(option, true);
+        }
+        function showPromiscuousPackage() {
+            option.series.data = promiscuouspackagecount;
+            option.title.text = "promiscuous Package";
+            myChart.setOption(option, true);
+        }
+        function showLongMethod() {
+            option.series.data = longmethodcount;
+            option.title.text = "long Method";
+            myChart.setOption(option, true);
+        }
+
+
+
+    </script>
+</body>
+</html>

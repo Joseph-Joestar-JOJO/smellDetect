@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ProjcommitMapper">
+  <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.Projcommit">
+    <id column="projId" jdbcType="INTEGER" property="projid" />
+    <id column="commitHash" jdbcType="VARCHAR" property="commithash" />
+    <result column="projName" jdbcType="VARCHAR" property="projname" />
+    <result column="commitAuthor" jdbcType="VARCHAR" property="commitauthor" />
+    <result column="commitDate" jdbcType="VARCHAR" property="commitdate" />
+    <result column="authorEmail" jdbcType="VARCHAR" property="authoremail" />
+    <result column="tag" jdbcType="VARCHAR" property="tag" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="smellcount" jdbcType="INTEGER" property="smellcount" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    projId, commitHash, projName, commitAuthor, commitDate, authorEmail, tag, `status`, 
+    smellcount
+  </sql>
+
+  <sql id="selectCommitVo">
+        select projId, commitHash, projName, commitAuthor, commitDate, authorEmail, tag,smellcount,status
+		from projcommit
+  </sql>
+
+  <select id="selectCommitAll" resultMap="BaseResultMap">
+    <include refid="selectCommitVo"/>
+  </select>
+
+  <select id="selectCommitList" parameterType="com.ruoyi.system.domain.Projcommit" resultMap="BaseResultMap">
+    <include refid="selectCommitVo"/>
+    <where>
+      <if test="projname != null and projname != ''">
+        AND projname like concat('%', #{projname}, '%')
+      </if>
+      <if test="commithash != null and commithash != ''">
+        AND commithash like concat('%', #{commithash}, '%')
+      </if>
+      <if test="commitauthor != null and commitauthor != ''">
+        AND commitauthor like concat('%', #{commitauthor}, '%')
+      </if>
+      <if test="tag != null and tag != ''">
+        AND tag like concat('%', #{tag}, '%')
+      </if>
+      <if test="smellcount != null and smellcount != ''">
+        AND smellcount like concat('%', #{smellcount}, '%')
+      </if>
+    </where>
+  </select>
+
+  <select id="selectByExample" parameterType="generator.ProjcommitExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from projcommit
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="generator.ProjcommitKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from projcommit
+    where projId = #{projid,jdbcType=INTEGER}
+      and commitHash = #{commithash,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="generator.ProjcommitKey">
+    delete from projcommit
+    where projId = #{projid,jdbcType=INTEGER}
+      and commitHash = #{commithash,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="generator.ProjcommitExample">
+    delete from projcommit
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="projId" keyProperty="projid" parameterType="com.ruoyi.system.domain.Projcommit" useGeneratedKeys="true">
+    insert into projcommit (commitHash, projName, commitAuthor, 
+      commitDate, authorEmail, tag, 
+      `status`, smellcount)
+    values (#{commithash,jdbcType=VARCHAR}, #{projname,jdbcType=VARCHAR}, #{commitauthor,jdbcType=VARCHAR}, 
+      #{commitdate,jdbcType=VARCHAR}, #{authoremail,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{smellcount,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" keyColumn="projId" keyProperty="projid" parameterType="com.ruoyi.system.domain.Projcommit" useGeneratedKeys="true">
+    insert into projcommit
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="commithash != null">
+        commitHash,
+      </if>
+      <if test="projname != null">
+        projName,
+      </if>
+      <if test="commitauthor != null">
+        commitAuthor,
+      </if>
+      <if test="commitdate != null">
+        commitDate,
+      </if>
+      <if test="authoremail != null">
+        authorEmail,
+      </if>
+      <if test="tag != null">
+        tag,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="smellcount != null">
+        smellcount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="commithash != null">
+        #{commithash,jdbcType=VARCHAR},
+      </if>
+      <if test="projname != null">
+        #{projname,jdbcType=VARCHAR},
+      </if>
+      <if test="commitauthor != null">
+        #{commitauthor,jdbcType=VARCHAR},
+      </if>
+      <if test="commitdate != null">
+        #{commitdate,jdbcType=VARCHAR},
+      </if>
+      <if test="authoremail != null">
+        #{authoremail,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null">
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="smellcount != null">
+        #{smellcount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="generator.ProjcommitExample" resultType="java.lang.Long">
+    select count(*) from projcommit
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update projcommit
+    <set>
+      <if test="record.projid != null">
+        projId = #{record.projid,jdbcType=INTEGER},
+      </if>
+      <if test="record.commithash != null">
+        commitHash = #{record.commithash,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projname != null">
+        projName = #{record.projname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.commitauthor != null">
+        commitAuthor = #{record.commitauthor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.commitdate != null">
+        commitDate = #{record.commitdate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.authoremail != null">
+        authorEmail = #{record.authoremail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tag != null">
+        tag = #{record.tag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        `status` = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.smellcount != null">
+        smellcount = #{record.smellcount,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update projcommit
+    set projId = #{record.projid,jdbcType=INTEGER},
+      commitHash = #{record.commithash,jdbcType=VARCHAR},
+      projName = #{record.projname,jdbcType=VARCHAR},
+      commitAuthor = #{record.commitauthor,jdbcType=VARCHAR},
+      commitDate = #{record.commitdate,jdbcType=VARCHAR},
+      authorEmail = #{record.authoremail,jdbcType=VARCHAR},
+      tag = #{record.tag,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=VARCHAR},
+      smellcount = #{record.smellcount,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.system.domain.Projcommit">
+    update projcommit
+    <set>
+      <if test="projname != null">
+        projName = #{projname,jdbcType=VARCHAR},
+      </if>
+      <if test="commitauthor != null">
+        commitAuthor = #{commitauthor,jdbcType=VARCHAR},
+      </if>
+      <if test="commitdate != null">
+        commitDate = #{commitdate,jdbcType=VARCHAR},
+      </if>
+      <if test="authoremail != null">
+        authorEmail = #{authoremail,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null">
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="smellcount != null">
+        smellcount = #{smellcount,jdbcType=INTEGER},
+      </if>
+    </set>
+    where projId = #{projid,jdbcType=INTEGER}
+      and commitHash = #{commithash,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.system.domain.Projcommit">
+    update projcommit
+    set projName = #{projname,jdbcType=VARCHAR},
+      commitAuthor = #{commitauthor,jdbcType=VARCHAR},
+      commitDate = #{commitdate,jdbcType=VARCHAR},
+      authorEmail = #{authoremail,jdbcType=VARCHAR},
+      tag = #{tag,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=VARCHAR},
+      smellcount = #{smellcount,jdbcType=INTEGER}
+    where projId = #{projid,jdbcType=INTEGER}
+      and commitHash = #{commithash,jdbcType=VARCHAR}
+  </update>
+</mapper>

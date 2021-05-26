@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="generator.ProjectDao">
+  <resultMap id="BaseResultMap" type="generator.Project">
+    <id column="projId" jdbcType="INTEGER" property="projid" />
+    <result column="projURL" jdbcType="VARCHAR" property="projurl" />
+    <result column="projName" jdbcType="VARCHAR" property="projname" />
+    <result column="LineCount" jdbcType="VARCHAR" property="linecount" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="creater" jdbcType="VARCHAR" property="creater" />
+    <result column="manager" jdbcType="VARCHAR" property="manager" />
+    <result column="membercount" jdbcType="VARCHAR" property="membercount" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    projId, projURL, projName, LineCount, user_id, `status`, creater, manager, membercount
+  </sql>
+  <select id="selectByExample" parameterType="generator.ProjectExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from project
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from project
+    where projId = #{projid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from project
+    where projId = #{projid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="generator.ProjectExample">
+    delete from project
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="projId" keyProperty="projid" parameterType="generator.Project" useGeneratedKeys="true">
+    insert into project (projURL, projName, LineCount, 
+      user_id, `status`, creater, 
+      manager, membercount)
+    values (#{projurl,jdbcType=VARCHAR}, #{projname,jdbcType=VARCHAR}, #{linecount,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=BIGINT}, #{status,jdbcType=VARCHAR}, #{creater,jdbcType=VARCHAR}, 
+      #{manager,jdbcType=VARCHAR}, #{membercount,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="projId" keyProperty="projid" parameterType="generator.Project" useGeneratedKeys="true">
+    insert into project
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="projurl != null">
+        projURL,
+      </if>
+      <if test="projname != null">
+        projName,
+      </if>
+      <if test="linecount != null">
+        LineCount,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="manager != null">
+        manager,
+      </if>
+      <if test="membercount != null">
+        membercount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="projurl != null">
+        #{projurl,jdbcType=VARCHAR},
+      </if>
+      <if test="projname != null">
+        #{projname,jdbcType=VARCHAR},
+      </if>
+      <if test="linecount != null">
+        #{linecount,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="manager != null">
+        #{manager,jdbcType=VARCHAR},
+      </if>
+      <if test="membercount != null">
+        #{membercount,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="generator.ProjectExample" resultType="java.lang.Long">
+    select count(*) from project
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update project
+    <set>
+      <if test="record.projid != null">
+        projId = #{record.projid,jdbcType=INTEGER},
+      </if>
+      <if test="record.projurl != null">
+        projURL = #{record.projurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projname != null">
+        projName = #{record.projname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.linecount != null">
+        LineCount = #{record.linecount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.status != null">
+        `status` = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.creater != null">
+        creater = #{record.creater,jdbcType=VARCHAR},
+      </if>
+      <if test="record.manager != null">
+        manager = #{record.manager,jdbcType=VARCHAR},
+      </if>
+      <if test="record.membercount != null">
+        membercount = #{record.membercount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update project
+    set projId = #{record.projid,jdbcType=INTEGER},
+      projURL = #{record.projurl,jdbcType=VARCHAR},
+      projName = #{record.projname,jdbcType=VARCHAR},
+      LineCount = #{record.linecount,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      `status` = #{record.status,jdbcType=VARCHAR},
+      creater = #{record.creater,jdbcType=VARCHAR},
+      manager = #{record.manager,jdbcType=VARCHAR},
+      membercount = #{record.membercount,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="generator.Project">
+    update project
+    <set>
+      <if test="projurl != null">
+        projURL = #{projurl,jdbcType=VARCHAR},
+      </if>
+      <if test="projname != null">
+        projName = #{projname,jdbcType=VARCHAR},
+      </if>
+      <if test="linecount != null">
+        LineCount = #{linecount,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        creater = #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="manager != null">
+        manager = #{manager,jdbcType=VARCHAR},
+      </if>
+      <if test="membercount != null">
+        membercount = #{membercount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where projId = #{projid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="generator.Project">
+    update project
+    set projURL = #{projurl,jdbcType=VARCHAR},
+      projName = #{projname,jdbcType=VARCHAR},
+      LineCount = #{linecount,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=BIGINT},
+      `status` = #{status,jdbcType=VARCHAR},
+      creater = #{creater,jdbcType=VARCHAR},
+      manager = #{manager,jdbcType=VARCHAR},
+      membercount = #{membercount,jdbcType=VARCHAR}
+    where projId = #{projid,jdbcType=INTEGER}
+  </update>
+</mapper>
